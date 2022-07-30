@@ -4,6 +4,7 @@
     <label for="username">Username</label>
     <input id="username" type="text" formControlName="username" />
   </div>
+  {{ authForm.get("username")?.errors | json }}
   <div class="field">
     <label for="password">Password</label>
     <input id="password" type="password" formControlName="password" />
@@ -17,4 +18,6 @@
     />
   </div>
   <button class="ui submit button primary">Submit</button>
+
+  {{ authForm.errors | json }}
 </form>
