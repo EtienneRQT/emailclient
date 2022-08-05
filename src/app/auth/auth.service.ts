@@ -10,8 +10,11 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   usernameAvailable(username: string): Observable<ValidationErrors | null> {
-    return this.http.post<any>('https://api.angular-email.com/auth/username', {
-      username,
-    });
+    return this.http.post<Observable<ValidationErrors | null>>(
+      'https://api.angular-email.com/auth/username',
+      {
+        username,
+      }
+    );
   }
 }
