@@ -18,14 +18,19 @@
   <div
     *ngIf="
       authForm.get('password')?.touched &&
-      authForm.get('passwordConfirmation')?.touched
+      authForm.get('passwordConfirmation')?.touched &&
+      authForm.errors
     "
+    class="ui red basic label"
   >
-    <p
-      class="ui red basic label"
-      *ngIf="authForm.errors?.['passwordsDontMatch']"
-    >
+    <p *ngIf="authForm.errors?.['passwordsDontMatch']">
       Password and password confirmation must match
+    </p>
+    <p *ngIf="authForm.errors?.['noConnection']">
+      No internet connection detected, failed to sign up
+    </p>
+    <p *ngIf="authForm.errors?.['unkwownError']">
+      An unknown error occured, please try again later
     </p>
   </div>
   <div>

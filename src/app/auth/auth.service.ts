@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { ValidationErrors } from '@angular/forms';
 
 interface SignupCredentials {
@@ -18,6 +18,7 @@ interface SignupResponse {
 })
 export class AuthService {
   private baseUrl = 'https://api.angular-email.com/';
+  public signedIn$ = new BehaviorSubject(false);
 
   constructor(private http: HttpClient) {}
 
@@ -31,9 +32,12 @@ export class AuthService {
   }
 
   signup(credentials: SignupCredentials) {
-    return this.http.post<SignupResponse>(
-      `${this.baseUrl}auth/signup`,
-      credentials
-    );
+    return this.http
+      .post<SignupResponse>(`${this.baseUrl}auth/signup`, credentials)
+      .pipe(
+        tap(() => {
+          this.signedIn$.next(true);
+        })
+      );
   }
 }
