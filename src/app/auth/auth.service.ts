@@ -9,8 +9,23 @@ interface SignupCredentials {
   passwordConfirmation: string;
 }
 
+interface SigninCredentials {
+  username: string;
+  password: string;
+}
+
 interface SignupResponse {
   username: string;
+}
+
+interface SignedInResponse {
+  authenticated: boolean;
+  username: string;
+}
+
+interface SignInResponse {
+  username: string;
+  password: string;
 }
 
 @Injectable({
@@ -31,7 +46,7 @@ export class AuthService {
     );
   }
 
-  signup(credentials: SignupCredentials) {
+  signup(credentials: SignupCredentials): Observable<SignupResponse> {
     return this.http
       .post<SignupResponse>(`${this.baseUrl}auth/signup`, credentials)
       .pipe(
@@ -41,11 +56,29 @@ export class AuthService {
       );
   }
 
-  checkAuth() {
-    return this.http.get(`${this.baseUrl}auth/signedin`).pipe(
-      tap((response) => {
-        console.log(response);
+  checkAuth(): Observable<SignedInResponse> {
+    return this.http.get<SignedInResponse>(`${this.baseUrl}auth/signedin`).pipe(
+      tap(({ authenticated }) => {
+        this.signedIn$.next(authenticated);
       })
     );
+  }
+
+  signout(): Observable<boolean> {
+    return this.http.post<boolean>(`${this.baseUrl}auth/signout`, {}).pipe(
+      tap(() => {
+        this.signedIn$.next(false);
+      })
+    );
+  }
+
+  signin(value: SigninCredentials): Observable<SignInResponse> {
+    return this.http
+      .post<SignInResponse>(`${this.baseUrl}auth/signin`, value)
+      .pipe(
+        tap(() => {
+          this.signedIn$.next(true);
+        })
+      );
   }
 }
