@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   public title: string = 'emailclient';
-  public signedIn$: BehaviorSubject<boolean>;
+  public signedIn$: BehaviorSubject<boolean | null>;
 
   constructor(private authService: AuthService, private router: Router) {
     this.signedIn$ = this.authService.signedIn$;
@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.checkAuth().subscribe(() => {
-      this.router.navigateByUrl('/')
+      this.router.navigateByUrl('/');
     });
   }
 }
